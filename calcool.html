@@ -68,7 +68,15 @@
         }
         .current-date p {
             font-weight: bold;
-            font-size: 18px;
+            font-size: 20px;
+        }
+        .current-date .time-container {
+            display: flex;
+            justify-content: space-around;
+            gap: 30px;
+        }
+        .current-date .time-box {
+            text-align: center;
         }
     </style>
 </head>
@@ -76,6 +84,7 @@
     <div class="current-date">
         <p id="current-gregorian-date"></p>
         <p id="current-hebrew-date"></p>
+        <div id="times" class="time-container"></div>
     </div>
 
     <div id="main-menu" class="container">
@@ -198,8 +207,30 @@
                     const hebrewDate = data.hebrew;
                     document.getElementById('current-gregorian-date').textContent = `${dayOfWeek}, ${gregorianDate}`;
                     document.getElementById('current-hebrew-date').textContent = `${hebrewDate}`;
+                    showTimes();
                 })
                 .catch(error => console.error('Error:', error));
+        }
+
+        function showTimes() {
+            const now = luxon.DateTime.now().setZone('Asia/Jerusalem');
+            const berlinTime = now.setZone('Europe/Berlin').toLocaleString(luxon.DateTime.TIME_SIMPLE);
+            const nycTime = now.setZone('America/New_York').toLocaleString(luxon.DateTime.TIME_SIMPLE);
+
+            document.getElementById('times').innerHTML = `
+                <div class="time-box">
+                    <p>ישראל</p>
+                    <p>${now.toLocaleString(luxon.DateTime.TIME_SIMPLE)}</p>
+                </div>
+                <div class="time-box">
+                    <p>ברלין</p>
+                    <p>${berlinTime}</p>
+                </div>
+                <div class="time-box">
+                    <p>ניו יורק</p>
+                    <p>${nycTime}</p>
+                </div>
+            `;
         }
 
         function showHolidays(year, month) {
